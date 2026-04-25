@@ -1,25 +1,4 @@
-/*import nodemailer from "nodemailer";
-import dotenv from "dotenv";
-dotenv.config();
-
-export const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS, 
-  },
-});
-
-export async function sendOTP(email, otp) {
-  await transporter.sendMail({
-    from: process.env.MAIL_USER,
-    to: email,
-    subject: "Your OTP",
-    text: `Your OTP is ${otp}. It expires in 5 minutes.`,
-  });
-}  */
-
-  import nodemailer from "nodemailer";
+import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import { otpTemplate } from "./templates/otpTemplate.js";
 import { billTemplate } from "./templates/billTemplate.js";
@@ -36,7 +15,7 @@ export const transporter = nodemailer.createTransport({
 });
 
 /**
- * Sends a beautiful HTML OTP email
+ * Sends a  HTML OTP email
  */
 export async function sendOTP(email, otp) {
   try {
@@ -44,7 +23,7 @@ export async function sendOTP(email, otp) {
       from: `"Mess Management" <${process.env.MAIL_USER}>`,
       to: email,
       subject: "Login Verification Code",
-      html: otpTemplate(otp), // Calling external HTML template
+      html: otpTemplate(otp),
     });
     return { success: true };
   } catch (error) {
