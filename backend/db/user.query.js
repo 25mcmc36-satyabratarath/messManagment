@@ -1,7 +1,7 @@
 const queries = {
 
   // =========================================
-  // AUTH / STUDENT LOOKUP
+  // AUTH / STUDENT
   // =========================================
 
   getStudentByEmail: `
@@ -34,15 +34,33 @@ const queries = {
   `,
 
   // =========================================
-  // STAFF
+  // STAFF (UPDATED SECTION)
   // =========================================
-    getStaffById: `
+
+  getStaffByEmail: `
+    SELECT * FROM staff WHERE email = ?;
+  `,
+
+  getStaffById: `
     SELECT * FROM staff WHERE staff_id = ?;
   `,
 
+  getAllStaff: `
+    SELECT * FROM staff;
+  `,
+
+  deleteStaff: `
+    DELETE FROM staff WHERE staff_id = ?;
+  `,
+
+  updateStaff: `
+    UPDATE staff
+    SET name = ?, email = ?, role = ?, hostel_id = ?
+    WHERE staff_id = ?;
+  `,
 
   // =========================================
-  //  HOSTEL
+  // HOSTEL
   // =========================================
 
   getAllHostels: `
@@ -53,7 +71,6 @@ const queries = {
     INSERT INTO hostel (hostel_name, location)
     VALUES (?, ?);
   `,
-
 
   // =========================================
   // MESS CARD
@@ -74,16 +91,14 @@ const queries = {
     WHERE student_id = ? AND status = 'ACTIVE';
   `,
 
-
   // =========================================
-  //  MESS HISTORY
+  // HISTORY
   // =========================================
 
   addMessHistory: `
     INSERT INTO mess_card_history (student_id, open_date, close_date, days)
     VALUES (?, ?, ?, ?);
   `,
-
 
   // =========================================
   // DAILY EXPENSE
@@ -97,7 +112,6 @@ const queries = {
   getDailyExpense: `
     SELECT * FROM daily_expense WHERE hostel_id = ?;
   `,
-
 
   // =========================================
   // SPECIAL MEAL
@@ -118,9 +132,8 @@ const queries = {
     SELECT * FROM special_meal WHERE hostel_id = ?;
   `,
 
-
   // =========================================
-  //  SUBSCRIPTION
+  // SUBSCRIPTION
   // =========================================
 
   addSubscription: `
@@ -132,9 +145,8 @@ const queries = {
     SELECT * FROM subscription WHERE student_id = ?;
   `,
 
-
   // =========================================
-  //  BILLING
+  // BILLING
   // =========================================
 
   createBill: `
@@ -150,7 +162,6 @@ const queries = {
     UPDATE bill SET payment_status = 'PAID' WHERE bill_id = ?;
   `,
 
-
   // =========================================
   // PAYMENT
   // =========================================
@@ -160,9 +171,8 @@ const queries = {
     VALUES (?, ?, CURDATE(), 'SUCCESS');
   `,
 
-
   // =========================================
-  //  FEEDBACK
+  // FEEDBACK
   // =========================================
 
   addFeedback: `
@@ -170,9 +180,8 @@ const queries = {
     VALUES (?, CURDATE(), ?, ?, ?);
   `,
 
-
   // =========================================
-  //  OTP (if you fallback to DB-based)
+  // OTP
   // =========================================
 
   saveOTP: `
@@ -185,9 +194,8 @@ const queries = {
     WHERE email = ? AND otp_code = ? AND expires_at > NOW();
   `,
 
-
   // =========================================
-  //  ANALYTICS 
+  // ANALYTICS
   // =========================================
 
   cardAnalysis: `
