@@ -1,7 +1,7 @@
 const queries = {
 
   // =========================================
-  // AUTH / STUDENT LOOKUP
+  // AUTH / STUDENT
   // =========================================
 
   getStudentByEmail: `
@@ -34,15 +34,33 @@ const queries = {
   `,
 
   // =========================================
-  // STAFF
+  // STAFF (UPDATED SECTION)
   // =========================================
-    getStaffById: `
+
+  getStaffByEmail: `
+    SELECT * FROM staff WHERE email = ?;
+  `,
+
+  getStaffById: `
     SELECT * FROM staff WHERE staff_id = ?;
   `,
 
+  getAllStaff: `
+    SELECT * FROM staff;
+  `,
+
+  deleteStaff: `
+    DELETE FROM staff WHERE staff_id = ?;
+  `,
+
+  updateStaff: `
+    UPDATE staff
+    SET name = ?, email = ?, role = ?, hostel_id = ?
+    WHERE staff_id = ?;
+  `,
 
   // =========================================
-  //  HOSTEL
+  // HOSTEL
   // =========================================
 
   getAllHostels: `
@@ -53,7 +71,6 @@ const queries = {
     INSERT INTO hostel (hostel_name, location)
     VALUES (?, ?);
   `,
-
 
   // =========================================
   // MESS CARD
@@ -73,17 +90,80 @@ const queries = {
     SET status = 'CLOSED', close_date = CURDATE()
     WHERE student_id = ? AND status = 'ACTIVE';
   `,
+  messCardIntervals: `
+  SELECT 
+      student_id,
+      GREATEST(open_date, ?) AS open_date,
+      LEAST(close_date, ?) AS close_date,
+      GREATEST(
+          0,
+          DATEDIFF(
+              LEAST(close_date, ?),
+              GREATEST(open_date, ?)
+          ) + 1
+      ) AS days
+  FROM (
+      SELECT 
+          student_id,
+          open_date,
+          IFNULL(close_date, CURRENT_DATE) AS close_date
+      FROM mess_card
 
+      UNION ALL
+
+      SELECT 
+          student_id,
+          open_date,
+          close_date
+      FROM mess_card_history
+  ) AS intervals
+  WHERE student_id = ?
+  AND open_date <= ?
+  AND close_date >= ?;
+  `,
+
+  messCardSummary: `
+  SELECT 
+      IFNULL(SUM(days),0) AS total_active_days,
+      COUNT(*) AS total_open_intervals
+  FROM (
+      SELECT 
+          GREATEST(
+              0,
+              DATEDIFF(
+                  LEAST(close_date, ?),
+                  GREATEST(open_date, ?)
+              ) + 1
+          ) AS days
+      FROM (
+          SELECT 
+              student_id,
+              open_date,
+              IFNULL(close_date, CURRENT_DATE) AS close_date
+          FROM mess_card
+
+          UNION ALL
+
+          SELECT 
+              student_id,
+              open_date,
+              close_date
+          FROM mess_card_history
+      ) AS intervals
+      WHERE student_id = ?
+      AND open_date <= ?
+      AND close_date >= ?
+  ) t;
+  `,
 
   // =========================================
-  //  MESS HISTORY
+  // HISTORY
   // =========================================
 
   addMessHistory: `
     INSERT INTO mess_card_history (student_id, open_date, close_date, days)
     VALUES (?, ?, ?, ?);
   `,
-
 
   // =========================================
   // DAILY EXPENSE
@@ -97,7 +177,6 @@ const queries = {
   getDailyExpense: `
     SELECT * FROM daily_expense WHERE hostel_id = ?;
   `,
-
 
   // =========================================
   // SPECIAL MEAL
@@ -118,9 +197,8 @@ const queries = {
     SELECT * FROM special_meal WHERE hostel_id = ?;
   `,
 
-
   // =========================================
-  //  SUBSCRIPTION
+  // SUBSCRIPTION
   // =========================================
 
   addSubscription: `
@@ -132,9 +210,8 @@ const queries = {
     SELECT * FROM subscription WHERE student_id = ?;
   `,
 
-
   // =========================================
-  //  BILLING
+  // BILLING
   // =========================================
 
   createBill: `
@@ -150,7 +227,6 @@ const queries = {
     UPDATE bill SET payment_status = 'PAID' WHERE bill_id = ?;
   `,
 
-
   // =========================================
   // PAYMENT
   // =========================================
@@ -160,9 +236,8 @@ const queries = {
     VALUES (?, ?, CURDATE(), 'SUCCESS');
   `,
 
-
   // =========================================
-  //  FEEDBACK
+  // FEEDBACK
   // =========================================
 
   addFeedback: `
@@ -170,9 +245,8 @@ const queries = {
     VALUES (?, CURDATE(), ?, ?, ?);
   `,
 
-
   // =========================================
-  //  OTP (if you fallback to DB-based)
+  // OTP
   // =========================================
 
   saveOTP: `
@@ -185,9 +259,8 @@ const queries = {
     WHERE email = ? AND otp_code = ? AND expires_at > NOW();
   `,
 
-
   // =========================================
-  //  ANALYTICS 
+  // ANALYTICS
   // =========================================
 
   cardAnalysis: `

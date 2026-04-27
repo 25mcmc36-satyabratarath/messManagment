@@ -6,13 +6,10 @@ import jwt from "jsonwebtoken";
 
 const AUTH_SECRET = process.env.AUTH_SECRET || "authsecret";
 
-
+/* ===================== FIND USER ===================== */
 async function findUserByRole(email, role) {
   if (role === "STUDENT") {
-    const [rows] = await pool.query(
-      queries.getStudentByEmail,
-      [email]
-    );
+    const [rows] = await pool.query(queries.getStudentByEmail, [email]);
 
     if (rows.length > 0) {
       return {
@@ -22,10 +19,7 @@ async function findUserByRole(email, role) {
       };
     }
   } else {
-    const [rows] = await pool.query(
-      queries.getStaffByEmail,
-      [email]
-    );
+    const [rows] = await pool.query(queries.getStaffByEmail, [email]);
 
     if (rows.length > 0 && rows[0].role === role) {
       return {
@@ -39,7 +33,7 @@ async function findUserByRole(email, role) {
   return null;
 }
 
-
+/* ===================== SEND OTP ===================== */
 async function sendOtp(req, res) {
   const { email, role } = req.body;
 
@@ -53,13 +47,12 @@ async function sendOtp(req, res) {
     }
 
     const { otp, token } = generateOTP(email);
-
     await sendOTP(email, otp);
 
     return res.json({
       message: "OTP sent",
       token,
-      role 
+      role
     });
 
   } catch (err) {
@@ -72,7 +65,7 @@ async function sendOtp(req, res) {
 
 
 
-async function verifyOtp(req, res) {
+async function verifyOtpEndpoint(req, res) {
   const { otp, token, role } = req.body;
 
   try {
@@ -95,22 +88,17 @@ async function verifyOtp(req, res) {
     const { user, id } = result;
 
     const authToken = jwt.sign(
-      {
-        id,
-        email: user.email,
-        role
-      },
+      { id, email: user.email, role },
       AUTH_SECRET,
       { expiresIn: "1d" }
     );
 
     res.cookie("token", authToken, {
-        httpOnly: true,         
-        secure: false,           
-        sameSite: "lax",        
-        maxAge: 24 * 60 * 60 * 1000 
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000
     });
-
 
     return res.json({
       message: "Login successful",
@@ -127,14 +115,63 @@ async function verifyOtp(req, res) {
   }
 }
 
-
-const logout = (req, res) => {
+/* ===================== LOGOUT ===================== */
+function logout(req, res) {
   res.clearCookie("token");
   res.json({ message: "Logged out" });
-};
+}
 
+/* ===================== ADD STAFF ===================== */
+async function addStaff(req, res) {
+  const { name, email, role, hostel_id } = req.body;
+
+  try {
+    if (!name || !email || !role || !hostel_id) {
+      return res.status(400).json({
+        error: "All fields required"
+      });
+    }
+
+    const [result] = await pool.query(
+      "INSERT INTO staff (name, email, role, hostel_id) VALUES (?, ?, ?, ?)",
+      [name, email, role, hostel_id]
+    );
+
+    res.status(201).json({
+      message: "Staff added successfully",
+      staff_id: result.insertId
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      error: "Failed to add staff"
+    });
+  }
+}
+
+/* ===================== GET ALL STAFF ===================== */
+async function getAllStaff(req, res) {
+  try {
+    const [rows] = await pool.query(queries.getAllStaff);
+
+    res.json({
+      staff: rows
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      error: "Failed to fetch staff"
+    });
+  }
+}
+
+/* ===================== EXPORT ===================== */
 export {
   sendOtp,
-  verifyOtp,
-    logout
+ verifyOtpEndpoint as  verifyOtp  ,
+  logout,
+  addStaff,
+  getAllStaff
 };
