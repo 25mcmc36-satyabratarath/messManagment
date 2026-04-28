@@ -22,7 +22,7 @@
         hostel_id INT,
         name VARCHAR(100),
         role VARCHAR(50),
-        mail VARCHAR(100) ,
+        email VARCHAR(100) UNIQUE,
         FOREIGN KEY (hostel_id) REFERENCES hostel(hostel_id)
     );
 

@@ -5,6 +5,9 @@ import sqlInit from "./db/db.init.js";
 import userRoutes from "./routes/user.route.js";
 import wardenRoutes from "./routes/warden.route.js";
 import messRoutes from "./routes/mess.routs.js";
+import careTakerRoutes from "./routes/careTaker.route.js";
+import messSecretaryRoutes from "./routes/messSecratory.route.js";
+import supervisorRoutes from "./routes/messSupervisor.routes.js";
 
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swagger.js";
@@ -94,7 +97,9 @@ async function connectDB() {
 app.use("/api/users", userRoutes);
 app.use("/api/warden", wardenRoutes);
 app.use("/api/mess", messRoutes);
-
+app.use("/api/caretaker", careTakerRoutes); 
+app.use("/api/mess-secretary", messSecretaryRoutes); 
+app.use("/api/supervisor", supervisorRoutes);  
 // --------------------
 // ERROR HANDLER
 // --------------------

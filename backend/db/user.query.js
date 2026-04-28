@@ -53,6 +53,32 @@ const queries = {
     DELETE FROM staff WHERE staff_id = ?;
   `,
 
+  getActiveMessCardsByHostel: `
+    SELECT mc.card_id, mc.student_id, mc.status, mc.open_date, mc.close_date,
+           s.name AS student_name, s.email AS student_email, s.room_no
+    FROM mess_card mc
+    JOIN student s ON mc.student_id = s.student_id
+    WHERE mc.status = 'ACTIVE' AND s.hostel_id = ?;
+  `,
+
+  getMessSummaryByHostel: `
+    SELECT
+      (SELECT COUNT(*) FROM student WHERE hostel_id = ?) AS total_students,
+      (SELECT COUNT(*) FROM mess_card mc JOIN student s ON mc.student_id = s.student_id WHERE mc.status = 'ACTIVE' AND s.hostel_id = ?) AS active_cards,
+      (SELECT COUNT(*) FROM mess_card mc JOIN student s ON mc.student_id = s.student_id WHERE mc.status = 'CLOSED' AND s.hostel_id = ?) AS closed_cards,
+      (SELECT COUNT(*) FROM mess_card mc JOIN student s ON mc.student_id = s.student_id WHERE s.hostel_id = ?) AS total_cards
+  `,
+
+  updateMessEmailConfig: `
+    UPDATE mess_email_config
+    SET email = ?, smtp_host = ?, smtp_port = ?, password = ?, is_active = ?
+    WHERE config_id = ?;
+  `,
+
+  getMessEmailConfigById: `
+    SELECT * FROM mess_email_config WHERE config_id = ?;
+  `,
+
   updateStaff: `
     UPDATE staff
     SET name = ?, email = ?, role = ?, hostel_id = ?
@@ -210,6 +236,40 @@ const queries = {
     SELECT * FROM subscription WHERE student_id = ?;
   `,
 
+  getStudentMonthlyBill: `
+    SELECT * FROM bill WHERE student_id = ? AND month = ? AND year = ?;
+  `,
+
+  getStudentYearlyBill: `
+    SELECT year,
+      SUM(total_amount) AS total_amount,
+      COUNT(*) AS bill_count
+    FROM bill
+    WHERE student_id = ? AND year = ?
+    GROUP BY year;
+  `,
+
+  getStudentFeedback: `
+    SELECT * FROM feedback WHERE student_id = ? ORDER BY date DESC;
+  `,
+
+  getSpecialMealHistoryByStudent: `
+    SELECT sms.special_id,
+      sm.date,
+      sm.meal_name,
+      sm.total_cost,
+      sm.total_plates,
+      sms.plates_taken
+    FROM special_meal_student sms
+    JOIN special_meal sm ON sms.special_id = sm.special_id
+    WHERE sms.student_id = ?
+    ORDER BY sm.date DESC;
+  `,
+
+  getActiveMessCardByStudent: `
+    SELECT * FROM mess_card WHERE student_id = ? AND status = 'ACTIVE';
+  `,
+
   // =========================================
   // BILLING
   // =========================================
@@ -284,6 +344,18 @@ const queries = {
       AVG(food_rating) AS avg_food,
       AVG(hygiene_rating) AS avg_hygiene
     FROM feedback;
+  `,
+
+  // =========================================
+  // DAILY EXPENSE
+  // =========================================
+
+  addExpense: `
+    INSERT INTO daily_expense (hostel_id, date, normal_expense) VALUES (?, ?, ?)
+  `,
+
+  getExpensesByHostel: `
+    SELECT * FROM daily_expense WHERE hostel_id = ? ORDER BY date DESC
   `
 };
 

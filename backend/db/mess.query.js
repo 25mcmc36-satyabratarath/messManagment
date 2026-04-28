@@ -205,6 +205,8 @@ const getMessCardStatusByDate = async (date) => {
   return rows[0];
 };
 
-module.exports = {
-  getMessCardStatusByDate
+export {
+  getMessCardStatusByDate,
+  getStudentYearlyMess,
+  
 };

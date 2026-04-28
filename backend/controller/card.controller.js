@@ -61,13 +61,30 @@ import { sendOTP } from "../utils/mailer.js";
 
 const getYearlyBill = async (req, res) => {
   try {
-    const student_id = req.user.id; 
+    const student_id = req.user.id;
     const { year } = req.query;
+
     if (!year) {
       return res.status(400).json({
         error: "year is required (e.g. ?year=2026)"
       });
     }
+
+    const [rows] = await pool.query(queries.getStudentYearlyBill, [student_id, year]);
+
+    if (!rows.length) {
+      return res.status(404).json({
+        error: "No bill data found for the requested year"
+      });
+    }
+
+    const billSummary = rows[0];
+
+    res.json({
+      year: Number(year),
+      totalAmount: parseFloat(billSummary.total_amount) || 0,
+      billCount: billSummary.bill_count || 0
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server Error" });

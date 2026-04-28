@@ -118,11 +118,4 @@ router.post("/verify-otp", verifyOtp);
  */
 router.post("/logout", logout);
 
-
-
-
-
-
-
-
 export default router;

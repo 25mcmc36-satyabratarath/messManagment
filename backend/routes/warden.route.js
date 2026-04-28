@@ -1,5 +1,11 @@
 import { Router } from "express";
-import { addStaff } from "../controller/user.controller.js";
+import { addStaff, getAllStaff } from "../controller/user.controller.js";
+import {
+  removeStaff,
+  getMessSummary,
+  getAllMessActiveCards,
+  updateEmailConfig
+} from "../controller/warden.controller.js";
 import { authMiddleware } from "../middleware/auth.js";
 import { allowRoles } from "../middleware/role.js";
 
@@ -27,7 +33,7 @@ const router = Router();
  *             type: object
  *             required:
  *               - name
- *               - email   # ✅ ADDED
+ *               - email  
  *               - role
  *               - hostel_id
  *             properties:
@@ -36,7 +42,7 @@ const router = Router();
  *                 example: "Cook Ram"
  *               email:
  *                 type: string
- *                 example: "cookram@mess.com"   # ✅ ADDED
+ *                 example: "cookram@mess.com"   
  *               role:
  *                 type: string
  *                 example: "COOK"
@@ -62,5 +68,11 @@ router.post(
   allowRoles("WARDEN"),
   addStaff
 );
+
+router.get("/get-all-staff", authMiddleware, allowRoles("WARDEN"), getAllStaff);
+router.delete("/remove-staff/:id", authMiddleware, allowRoles("WARDEN"), removeStaff);
+router.get("/mess-summary", authMiddleware, allowRoles("WARDEN"), getMessSummary);
+router.get("/all-mess-active-cards", authMiddleware, allowRoles("WARDEN"), getAllMessActiveCards);
+router.post("/update-email/:mess_id", authMiddleware, allowRoles("WARDEN"), updateEmailConfig);
 
 export default router;

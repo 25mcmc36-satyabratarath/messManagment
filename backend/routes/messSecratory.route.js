@@ -3,7 +3,7 @@ import { authMiddleware } from "../middleware/auth.js";
 import { allowRoles } from "../middleware/role.js";
 
 //  import controller
-import * as messController from "../controllers/mess.controller.js";
+import * as messController from "../controller/mess_secretary.js";
 
 const router = Router();
 
