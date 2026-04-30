@@ -17,7 +17,7 @@ const router = Router();
  *   post:
  *     summary: Send OTP to user email (role-based)
  *     tags: [Auth]
- *     description: Sends OTP to email after validating user role (STUDENT / ADMIN / WARDEN)
+ *     description: Sends OTP to email after validating user role (STUDENT / MESS_SECRETARY / CARE_TAKER / MESS_SUPERVISOR / WARDEN)
  *     requestBody:
  *       required: true
  *       content:
@@ -33,7 +33,7 @@ const router = Router();
  *                 example: 25mcmc29@uohyd.ac.in
  *               role:
  *                 type: string
- *                 enum: [STUDENT, ADMIN, WARDEN]
+ *                 enum: [STUDENT, MESS_SECRETARY, CARE_TAKER, MESS_SUPERVISOR, WARDEN]
  *                 example: STUDENT
  *     responses:
  *       200:
@@ -77,7 +77,7 @@ router.post("/send-otp", sendOtp);
  *                 example: "jwt_temp_token_here"
  *               role:
  *                 type: string
- *                 enum: [STUDENT, ADMIN, WARDEN]
+ *                 enum: [STUDENT, MESS_SECRETARY, CARE_TAKER, MESS_SUPERVISOR, WARDEN]
  *                 example: STUDENT
  *     responses:
  *       200:

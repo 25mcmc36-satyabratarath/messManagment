@@ -7,7 +7,9 @@ import { sendOtp, verifyOtp } from "../../api/auth";
 
 const roles = [
   { label: "Student", value: "STUDENT" },
-  { label: "Admin", value: "ADMIN" },
+  { label: "Mess Secretary", value: "MESS_SECRETARY" },
+  { label: "Care Taker", value: "CARE_TAKER" },
+  { label: "Mess Supervisor", value: "MESS_SUPERVISOR" },
   { label: "Warden", value: "WARDEN" }
 ] as const;
 
@@ -49,10 +51,14 @@ const LoginForm = () => {
       await login({ token, role: verifiedRole, user });
       showToast("Login successful.", "success");
 
-      if (verifiedRole === "ADMIN") {
-        navigate("/admin");
-      } else if (verifiedRole === "WARDEN") {
-        navigate("/chief-warden");
+      if (verifiedRole === "WARDEN") {
+        navigate("/warden");
+      } else if (verifiedRole === "MESS_SECRETARY") {
+        navigate("/mess-secretary");
+      } else if (verifiedRole === "CARE_TAKER") {
+        navigate("/care-taker");
+      } else if (verifiedRole === "MESS_SUPERVISOR") {
+        navigate("/mess-supervisor");
       } else {
         navigate("/dashboard");
       }
@@ -78,7 +84,7 @@ const LoginForm = () => {
       />
 
       <label>Role</label>
-      <select value={role ?? "STUDENT"} onChange={(e) => setRole(e.target.value as "STUDENT" | "ADMIN" | "WARDEN") }>
+      <select value={role ?? "STUDENT"} onChange={(e) => setRole(e.target.value as "STUDENT" | "MESS_SECRETARY" | "CARE_TAKER" | "MESS_SUPERVISOR" | "WARDEN") }>
         {roles.map((item) => (
           <option key={item.value} value={item.value}>
             {item.label}

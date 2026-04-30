@@ -2,10 +2,13 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 
 import HomePage from "./pages/HomePage/HomePage";
 import LoginPage from "./pages/LoginPage/LoginPage";
-import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
-import ChiefWardenPanel from "./pages/ChiefWardenPanel/ChiefWardenPanel";
+
 import Dashboard from "./pages/Dashboard/Dashboard";
 import FeedbackPage from "./pages/FeedbackPage/Feedback";
+import MessSecretaryDashboard from "./pages/MessSecretaryDashboard/MessSecretaryDashboard";
+import CareTakerDashboard from "./pages/CareTakerDashboard/CareTakerDashboard";
+import MessSupervisorDashboard from "./pages/MessSupervisorDashboard/MessSupervisorDashboard";
+import WardenDashboard from "./pages/WardenDashboard/WardenDashboard";
 
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
@@ -14,7 +17,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 const AppContent = () => {
   const location = useLocation();
 
-  const hideLayoutRoutes = ["/admin", "/chief-warden", "/dashboard"];
+  const hideLayoutRoutes = ["/admin", "/chief-warden", "/dashboard", "/warden", "/mess-secretary", "/care-taker", "/mess-supervisor"];
 
   const isDashboardPage = hideLayoutRoutes.some(path =>
     location.pathname.startsWith(path)
@@ -36,21 +39,38 @@ const AppContent = () => {
             </ProtectedRoute>
           }
         />
-
         <Route
-          path="/admin"
+          path="/warden"
           element={
-            <ProtectedRoute allowedRoles={["ADMIN"]}>
-              <AdminDashboard />
+            <ProtectedRoute allowedRoles={["WARDEN"]}>
+              <WardenDashboard />
             </ProtectedRoute>
           }
         />
 
         <Route
-          path="/chief-warden"
+          path="/mess-secretary"
           element={
-            <ProtectedRoute allowedRoles={["WARDEN"]}>
-              <ChiefWardenPanel />
+            <ProtectedRoute allowedRoles={["MESS_SECRETARY"]}>
+              <MessSecretaryDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/care-taker"
+          element={
+            <ProtectedRoute allowedRoles={["CARE_TAKER"]}>
+              <CareTakerDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/mess-supervisor"
+          element={
+            <ProtectedRoute allowedRoles={["MESS_SUPERVISOR"]}>
+              <MessSupervisorDashboard />
             </ProtectedRoute>
           }
         />

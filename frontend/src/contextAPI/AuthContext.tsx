@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 
-export type UserRole = "STUDENT" | "ADMIN" | "WARDEN" | null;
+export type UserRole = "STUDENT" | "MESS_SECRETARY" | "CARE_TAKER" | "MESS_SUPERVISOR" |"WARDEN"| null;
+
 
 export interface AuthContextType {
   email: string;
