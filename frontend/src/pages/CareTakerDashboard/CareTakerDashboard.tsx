@@ -25,7 +25,7 @@ const CareTakerDashboard = () => {
   });
   const [expenseFormData, setExpenseFormData] = useState({
     description: "",
-    amount: 0,
+    normal_expense: 0,
     category: "FOOD",
     date: new Date().toISOString().split("T")[0],
     mess_id: 1
@@ -43,8 +43,8 @@ const CareTakerDashboard = () => {
         getExpenses()
       ]);
 
-      setStudents(studentsRes.data);
-      setExpenses(expensesRes.data);
+      setStudents(studentsRes.data.students);
+      setExpenses(expensesRes.data.expenses);
     } catch (error) {
       console.error("Error fetching care taker data:", error);
     } finally {
@@ -76,7 +76,7 @@ const CareTakerDashboard = () => {
       await addExpense(expenseFormData);
       setExpenseFormData({
         description: "",
-        amount: 0,
+        normal_expense: 0,
         category: "FOOD",
         date: new Date().toISOString().split("T")[0],
         mess_id: 1
@@ -92,7 +92,9 @@ const CareTakerDashboard = () => {
     return <div className="caretaker-dashboard">Loading...</div>;
   }
 
-  const totalExpenses = expenses.reduce((sum, exp) => sum + (exp.amount || 0), 0);
+console.log(students , expenses);
+
+  const totalExpenses = expenses.reduce((sum, exp) => sum + Number(exp.normal_expense || 0), 0);
 
   return (
     <div className="caretaker-dashboard">
@@ -254,11 +256,11 @@ const CareTakerDashboard = () => {
                 <div key={expense.id} className="expense-item">
                   <div>
                     <strong>{expense.description}</strong>
-                    <p>Date: {expense.date}</p>
+                    <p>Date: { new Date(expense.date).toISOString().split('T')[0]}</p>
                     <p>Category: {expense.category}</p>
                   </div>
                   <div className="amount">
-                    <strong>${expense.amount?.toFixed(2) || 0}</strong>
+                    <strong>${Number(expense.normal_expense || 0).toFixed(2)}</strong>
                   </div>
                 </div>
               ))

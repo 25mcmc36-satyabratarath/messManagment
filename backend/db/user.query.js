@@ -37,6 +37,11 @@ const queries = {
   // STAFF (UPDATED SECTION)
   // =========================================
 
+  addNewStudent: `
+  INSERT INTO student (name, email, hostel_id)
+  VALUES (?, ?, ?)
+` , 
+
   getStaffByEmail: `
     SELECT * FROM staff WHERE email = ?;
   `,

@@ -1,4 +1,4 @@
-import pool from "../db/db.init.js";
+import {pool} from "../index.js";
 import queries from "../db/user.query.js";
 export const addNewStudent = async (req, res) => {
     try {

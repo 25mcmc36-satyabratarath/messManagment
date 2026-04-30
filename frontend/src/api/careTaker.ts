@@ -12,7 +12,7 @@ export const addNewStudent = (data: {
 export const getAllStudents = () =>
   axiosInstance.get("/careTaker/get-all-student-details");
 
-// ===== Mess Card Management =====
+
 export const addNewCard = (data: {
   student_id: number;
   mess_id: number;
@@ -23,7 +23,7 @@ export const addNewCard = (data: {
 // ===== Expense Management =====
 export const addExpense = (data: {
   description: string;
-  amount: number;
+  normal_expense: number;
   category: string;
   date: string;
   mess_id: number;
