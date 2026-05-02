@@ -1,19 +1,22 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import "./index.css";
-import App from "./App.tsx";
-import AuthProvider from "./contextAPI/AuthProvider";
-import { ModalProvider } from "./contextAPI/ModalContext";
-import { ToastProvider } from "./contextAPI/ToastContext";
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import App from './App.tsx'
+import { AppProvider } from './context/AppContext.tsx'
+import { AuthProvider } from './context/AuthContext.tsx'
+import { ToastProvider } from './context/ToastContext.tsx'
+import './index.css'
 
-createRoot(document.getElementById("root")!).render(
+createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
-      <ToastProvider>
-        <ModalProvider>
-          <App />
-        </ModalProvider>
-      </ToastProvider>
+      <AppProvider>
+        <ToastProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ToastProvider>
+      </AppProvider>
     </AuthProvider>
-  </StrictMode>
-);
+  </StrictMode>,
+)

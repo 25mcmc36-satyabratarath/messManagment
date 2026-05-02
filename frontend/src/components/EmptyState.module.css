@@ -1,0 +1,27 @@
+.wrap {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: var(--muted, #5c6570);
+  border: 1px dashed var(--border, #d8dee6);
+  border-radius: 12px;
+  background: var(--surface-2, #f6f8fb);
+}
+
+.icon {
+  color: var(--border, #c5cdd6);
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text, #1a1f26);
+}
+
+.message {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  max-width: 420px;
+  margin-inline: auto;
+}

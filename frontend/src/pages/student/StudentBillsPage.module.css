@@ -1,0 +1,89 @@
+.title {
+  margin: 0 0 0.35rem;
+  font-size: 1.5rem;
+}
+
+.sub {
+  margin: 0 0 1.5rem;
+  color: var(--muted, #64748b);
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.h2 {
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.input {
+  font: inherit;
+  padding: 0.45rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid var(--border, #cbd5e1);
+  min-width: 120px;
+}
+
+.btn {
+  font: inherit;
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid var(--border, #cbd5e1);
+  background: var(--surface, #fff);
+  cursor: pointer;
+  height: fit-content;
+}
+
+.kpis {
+  margin: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.kpisTwo {
+  grid-template-columns: repeat(2, minmax(140px, 1fr));
+}
+
+.kpisFour {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.kpis dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted, #64748b);
+}
+
+.kpis dd {
+  margin: 0.2rem 0 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.fallbackNote {
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.85rem;
+  color: var(--muted, #475569);
+  background: #f1f5f9;
+  border-radius: 8px;
+  border: 1px solid var(--border, #e2e8f0);
+}

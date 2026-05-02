@@ -1,101 +1,112 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { DashboardLayout } from './layouts/DashboardLayout'
+import { CaretakerExpensePage } from './pages/caretaker/CaretakerExpensePage'
+import { CaretakerStudentsPage } from './pages/caretaker/CaretakerStudentsPage'
+import { ForbiddenPage } from './pages/ForbiddenPage'
+import { HomePage } from './pages/HomePage'
+import { LoginPage } from './pages/LoginPage'
+import { SecretaryOverviewPage } from './pages/secretary/SecretaryOverviewPage'
+import { SecretaryRationPage } from './pages/secretary/SecretaryRationPage'
+import { SecretarySpecialsPage } from './pages/secretary/SecretarySpecialsPage'
+import { SecretaryWeeklyExpensePage } from './pages/secretary/SecretaryWeeklyExpensePage'
+import { StudentBillsPage } from './pages/student/StudentBillsPage'
+import { StudentFeedbackPage } from './pages/student/StudentFeedbackPage'
+import { StudentMessCardPage } from './pages/student/StudentMessCardPage'
+import { StudentSpecialMealsPage } from './pages/student/StudentSpecialMealsPage'
+import { StudentSubscriptionsPage } from './pages/student/StudentSubscriptionsPage'
+import { SupervisorConsumptionPage } from './pages/supervisor/SupervisorConsumptionPage'
+import { SupervisorRationItemsPage } from './pages/supervisor/SupervisorRationItemsPage'
+import { WardenMessSummaryPage } from './pages/warden/WardenMessSummaryPage'
+import { WardenStaffPage } from './pages/warden/WardenStaffPage'
+import { DashboardIndexRedirect } from './routes/DashboardIndexRedirect'
+import { ProtectedRoute } from './routes/ProtectedRoute'
+import { RoleRoute } from './routes/RoleRoute'
 
-import HomePage from "./pages/HomePage/HomePage";
-import LoginPage from "./pages/LoginPage/LoginPage";
-
-import Dashboard from "./pages/Dashboard/Dashboard";
-import FeedbackPage from "./pages/FeedbackPage/Feedback";
-import MessSecretaryDashboard from "./pages/MessSecretaryDashboard/MessSecretaryDashboard";
-import CareTakerDashboard from "./pages/CareTakerDashboard/CareTakerDashboard";
-import MessSupervisorDashboard from "./pages/MessSupervisorDashboard/MessSupervisorDashboard";
-import WardenDashboard from "./pages/WardenDashboard/WardenDashboard";
-
-import Navbar from "./components/Navbar/Navbar";
-import Footer from "./components/Footer/Footer";
-import ProtectedRoute from "./components/ProtectedRoute";
-
-const AppContent = () => {
-  const location = useLocation();
-
-  const hideLayoutRoutes = ["/admin", "/chief-warden", "/dashboard", "/warden", "/mess-secretary", "/care-taker", "/mess-supervisor"];
-
-  const isDashboardPage = hideLayoutRoutes.some(path =>
-    location.pathname.startsWith(path)
-  );
-
+export default function App() {
   return (
-    <>
-      {!isDashboardPage && <Navbar />}
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/forbidden" element={<ForbiddenPage />} />
 
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<DashboardIndexRedirect />} />
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute allowedRoles={["STUDENT"]}>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/warden"
-          element={
-            <ProtectedRoute allowedRoles={["WARDEN"]}>
-              <WardenDashboard />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="student"
+            element={<RoleRoute allowed={['STUDENT']} />}
+          >
+            <Route
+              index
+              element={<Navigate to="mess-card" replace />}
+            />
+            <Route path="mess-card" element={<StudentMessCardPage />} />
+            <Route path="bills" element={<StudentBillsPage />} />
+            <Route path="feedback" element={<StudentFeedbackPage />} />
+            <Route path="special-meals" element={<StudentSpecialMealsPage />} />
+            <Route
+              path="subscriptions"
+              element={<StudentSubscriptionsPage />}
+            />
+          </Route>
 
-        <Route
-          path="/mess-secretary"
-          element={
-            <ProtectedRoute allowedRoles={["MESS_SECRETARY"]}>
-              <MessSecretaryDashboard />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="caretaker"
+            element={<RoleRoute allowed={['CARE_TAKER']} />}
+          >
+            <Route
+              index
+              element={<Navigate to="students" replace />}
+            />
+            <Route path="students" element={<CaretakerStudentsPage />} />
+            <Route path="expenses" element={<CaretakerExpensePage />} />
+          </Route>
 
-        <Route
-          path="/care-taker"
-          element={
-            <ProtectedRoute allowedRoles={["CARE_TAKER"]}>
-              <CareTakerDashboard />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="secretary"
+            element={<RoleRoute allowed={['MESS_SECRETARY']} />}
+          >
+            <Route
+              index
+              element={<Navigate to="overview" replace />}
+            />
+            <Route path="overview" element={<SecretaryOverviewPage />} />
+            <Route path="ration" element={<SecretaryRationPage />} />
+            <Route path="special-meals" element={<SecretarySpecialsPage />} />
+            <Route
+              path="weekly-expense"
+              element={<SecretaryWeeklyExpensePage />}
+            />
+          </Route>
 
-        <Route
-          path="/mess-supervisor"
-          element={
-            <ProtectedRoute allowedRoles={["MESS_SUPERVISOR"]}>
-              <MessSupervisorDashboard />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="supervisor"
+            element={<RoleRoute allowed={['MESS_SUPERVISOR']} />}
+          >
+            <Route
+              index
+              element={<Navigate to="ration-items" replace />}
+            />
+            <Route
+              path="ration-items"
+              element={<SupervisorRationItemsPage />}
+            />
+            <Route
+              path="consumption"
+              element={<SupervisorConsumptionPage />}
+            />
+          </Route>
 
-        <Route
-          path="/feedback"
-          element={
-            <ProtectedRoute allowedRoles={["STUDENT"]}>
-              <FeedbackPage />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+          <Route path="warden" element={<RoleRoute allowed={['WARDEN']} />}>
+            <Route index element={<Navigate to="staff" replace />} />
+            <Route path="staff" element={<WardenStaffPage />} />
+            <Route path="mess-summary" element={<WardenMessSummaryPage />} />
+          </Route>
+        </Route>
+      </Route>
 
-      {!isDashboardPage && <Footer />}
-    </>
-  );
-};
-
-function App() {
-  return (
-    <Router>
-      <AppContent />
-    </Router>
-  );
+      <Route path="/" element={<HomePage />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  )
 }
-
-export default App;

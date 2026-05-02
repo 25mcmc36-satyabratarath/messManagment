@@ -1,324 +1,229 @@
-// API Types for Mess Management System Frontend
-// Generated from backend route responses
+/** Role values sent to and returned from the API */
+export type UserRole =
+  | 'STUDENT'
+  | 'MESS_SECRETARY'
+  | 'CARE_TAKER'
+  | 'MESS_SUPERVISOR'
+  | 'WARDEN'
 
-// ====================
-// AUTH INTERFACES
-// ====================
-
-export type UserRole = "STUDENT" | "CARE_TAKER" | "MESS_SECRETARY" | "MESS_SUPERVISOR" | "WARDEN";
-export type StaffRole = "COOK" | "MESS_SECRETARY" | "CARE_TAKER" | "WARDEN" | "MESS_SUPERVISOR";
-
-export const ROLES = {
-  STUDENT: "STUDENT",
-  MESS_SECRETARY: "MESS_SECRETARY",
-  CARE_TAKER: "CARE_TAKER",
-  MESS_SUPERVISOR: "MESS_SUPERVISOR",
-  WARDEN: "WARDEN",
-} as const;
-
-export type Role = typeof ROLES[keyof typeof ROLES];
-
-export interface LoginRequest {
-  email: string;
-  role: UserRole;
+/** Normalised user for the app (API may use student_id / staff_id) */
+export interface AuthUser {
+  id: number
+  name: string
+  email: string
+  hostel_id?: number | null
+  /** Original role-specific id if different from id */
+  raw_student_id?: number
+  raw_staff_id?: number
 }
 
-export interface OTPVerifyRequest {
-  otp: string;
-  token: string;
-  role: UserRole;
+export interface SendOtpResult {
+  message: string
+  token: string
+  role: UserRole
 }
 
-export interface AuthResponse {
-  message: string;
-  token: string;
-  role: UserRole;
-  user?: UserData;
+export interface VerifyOtpResult {
+  message: string
+  token: string
+  role: UserRole
+  user: Record<string, unknown>
 }
 
-export interface UserData {
-  student_id?: number;
-  staff_id?: number;
-  name: string;
-  email: string;
-  hostel_id?: number;
-  room_no?: string;
-  role?: UserRole;
+export interface WardenStaff {
+  staff_id: number
+  hostel_id: number
+  name: string
+  email: string
+  role: string
 }
 
-// ====================
-// MESS CARD INTERFACES
-// ====================
-
-export interface MessCardViewResponse {
-  month: string;
-  year: string;
-  intervals: any[];
-  summary: MessCardSummary;
+export interface WardenMessSummary {
+  total_students: number
+  active_cards: number
+  closed_cards: number
+  total_cards: number
 }
 
-export interface MessCardSummary {
-  [key: string]: any;
+export interface WardenActiveCard {
+  card_id: number
+  student_id: number
+  status: string
+  open_date: string
+  close_date: string | null
+  student_name: string
+  student_email: string
+  room_no: string
 }
 
-export interface YearlyBillResponse {
-  year: number;
-  totalAmount: number;
-  billCount: number;
+export interface CaretakerStudent {
+  student_id: number
+  hostel_id: number
+  name: string
+  email: string
+  room_no: string
+  hostel_name: string
 }
 
-export interface MonthlyBillResponse {
-  success: boolean;
-  bills: any[];
+export interface CaretakerExpense {
+  expense_id: number
+  hostel_id: number
+  date: string
+  normal_expense: number
 }
 
-// ====================
-// FEEDBACK INTERFACES
-// ====================
-
-export interface FeedbackRequest {
-  food_rating: number;
-  hygiene_rating: number;
-  comments?: string;
+export interface SecretaryActiveCardsByDate {
+  total_cards?: number
+  active_cards?: number
+  date?: string
 }
 
-export interface FeedbackResponse {
-  success: boolean;
-  message: string;
+export interface SecretaryNetCard {
+  total_cards: number
+  open_cards: number
+  closed_cards: number
 }
 
-export interface FeedbackData {
-  feedback_id: number;
-  student_id: number;
-  date: string;
-  food_rating: number;
-  hygiene_rating: number;
-  comments?: string;
+export interface SecretaryRationRow {
+  date: string
+  total_expense: number
 }
 
-// ====================
-// SUBSCRIPTION INTERFACES
-// ====================
-
-export interface SubscriptionRequest {
-  item_name: string;
-  cost: number;
-  start_date: string;
-  end_date: string;
+export interface SecretarySpecialMeal {
+  id: number
+  meal_name: string
+  date: string
+  total_cost: number
+  total_plates: number
+  plates_taken: number
 }
 
-// ====================
-// SPECIAL MEAL INTERFACES
-// ====================
-
-export interface SpecialMealRequest {
-  hostel_id: number;
-  date: string;
-  meal_name: string;
-  total_cost: number;
-  total_plates: number;
+/** GET /api/mess-secretary/special-meal — each item in `data` */
+export interface SpecialMealCatalogEntry {
+  special_id: number
+  hostel_id: number
+  date: string
+  meal_name: string
+  total_cost: number
+  total_plates: number
 }
 
-export interface JoinSpecialMealRequest {
-  special_id: number;
+export interface SecretaryWeeklyRow {
+  week: string
+  total_expense: number
 }
 
-export interface SpecialMealData {
-  special_id: number;
-  hostel_id: number;
-  date: string;
-  meal_name: string;
-  total_cost: number;
-  total_plates: number;
+export interface SupervisorRationItem {
+  ration_item_id: number
+  hostel_id: number
+  name: string
+  unit: string
+  unit_cost: number
+  supplier_id: number
+  supplier_name?: string
+  created_at?: string
 }
 
-// ====================
-// MESS SECRETARY INTERFACES
-// ====================
-
-export interface RationConsumptionRequest {
-  hostel_id: number;
-  date: string;
-  normal_expense: number;
+export interface SupervisorMonthlyConsumptionData {
+  summary: {
+    total_monthly_cost: number
+    active_days: number
+    items_used: number
+  }
+  consumption: Array<{
+    item_name: string
+    unit: string
+    total_quantity: number
+    total_cost: number
+    days_used: number
+  }>
 }
 
-export interface WeeklyExpenseRequest {
-  hostel_id: number;
-  date: string;
-  normal_expense: number;
+export interface SupervisorConsumptionByDateRow {
+  consumption_id: number
+  ration_item_id: number
+  hostel_id: number
+  date: string
+  quantity: number
+  cost: number
+  item_name: string
+  unit: string
+  created_at?: string
 }
 
-export interface AddSpecialMealStudentRequest {
-  student_id: number;
-  plates_taken: number;
+/** One open/close interval for mess attendance (get-card-view). */
+export interface MessCardInterval {
+  student_id: number
+  open_date: string
+  close_date: string | null
+  days: number
 }
 
-// ====================
-// CARE TAKER INTERFACES
-// ====================
-
-export interface AddStudentRequest {
-  name: string;
-  email: string;
-  hostel_id: number;
+export interface MessCardViewSummary {
+  total_active_days: number
+  total_open_intervals: number
 }
 
-export interface StudentData {
-  student_id: number;
-  hostel_id: number;
-  name: string;
-  email: string;
-  room_no?: string;
-  hostel_name?: string;
+/**
+ * Normalised GET /api/mess/get-card-view.
+ * Supports OpenAPI scalars and alternate `intervals` + `summary` payloads.
+ */
+export interface StudentMessCardView {
+  month: number
+  year: number
+  card_id?: number
+  student_id?: number
+  active_days?: number
+  special_meals?: number
+  subscriptions?: number
+  total_amount?: number
+  intervals: MessCardInterval[]
+  summary: MessCardViewSummary | null
 }
 
-export interface AddMessCardRequest {
-  student_id: number;
+export interface StudentYearlyBill {
+  year: number
+  /** Year total — from API `totalAmount` or legacy `total_bills` */
+  total_bills: number
+  /** From API `billCount` when present */
+  bill_count: number
+  total_paid: number
+  balance_due: number
+  monthly_breakdown: Array<{ month: number; amount: number }>
 }
 
-export interface AddExpenseRequest {
-  date: string;
-  normal_expense: number;
+/** Normalised GET /api/mess/get-monthly-bill `bills[]` item */
+export interface StudentMonthlyBillRow {
+  bill_id: number
+  /** Same as bill_id (for legacy `id` in older docs) */
+  id: number
+  student_id?: number
+  month: number
+  year: number
+  normal_amount: number
+  special_amount: number
+  subscription_amount: number
+  total_amount: number
+  payment_status: string
 }
 
-export interface ExpenseData {
-  expense_id: number;
-  hostel_id: number;
-  date: string;
-  normal_expense: number;
+export interface StudentFeedbackItem {
+  /** API may return `feedback_id` or legacy `id` — normalised in service */
+  feedback_id: number
+  id: number
+  student_id?: number
+  food_rating: number
+  hygiene_rating: number
+  comments: string
+  /** ISO date from API (`date` and/or `created_at`) */
+  date?: string
+  created_at: string
 }
 
-// ====================
-// WARDEN INTERFACES
-// ====================
-
-export interface StaffRequest {
-  name: string;
-  email: string;
-  role: StaffRole;
-  hostel_id: number;
-}
-
-export interface StaffData extends StaffRequest {
-  staff_id: number;
-}
-
-export interface MessSummary {
-  total_students: number;
-  active_cards: number;
-  closed_cards: number;
-  total_cards: number;
-}
-
-export interface MessCard {
-  card_id: number;
-  student_id: number;
-  status: "ACTIVE" | "CLOSED";
-  open_date: string;
-  close_date?: string;
-  student_name: string;
-  student_email: string;
-  room_no?: string;
-}
-
-export interface UpdateEmailConfigRequest {
-  email: string;
-  smtp_host?: string;
-  smtp_port?: number;
-  password?: string;
-  is_active?: boolean;
-}
-
-// ====================
-// GENERIC INTERFACES
-// ====================
-
-export interface ErrorResponse {
-  error?: string;
-  success?: boolean;
-  message?: string;
-}
-
-export interface SuccessResponse<T = any> {
-  success: boolean;
-  message?: string;
-  data?: T;
-}
-
-// ====================
-// HOSTEL INTERFACES
-// ====================
-
-export interface HostelData {
-  hostel_id: number;
-  hostel_name: string;
-  location: string;
-}
-
-// ====================
-// MENU INTERFACES
-// ====================
-
-export interface MenuData {
-  menu_id: number;
-  hostel_id: number;
-  date: string;
-  day_of_week: string;
-  meal_type: string;
-  items: string;
-}
-
-// ====================
-// BILL INTERFACES
-// ====================
-
-export interface BillData {
-  bill_id: number;
-  student_id: number;
-  month: number;
-  year: number;
-  normal_amount: number;
-  special_amount: number;
-  subscription_amount: number;
-  total_amount: number;
-  payment_status: string;
-}
-
-// ====================
-// PAYMENT INTERFACES
-// ====================
-
-export interface PaymentData {
-  payment_id: number;
-  bill_id: number;
-  amount: number;
-  payment_date: string;
-  status: string;
-}
-
-// ====================
-// OTP INTERFACES
-// ====================
-
-export interface OTPData {
-  otp_id: number;
-  email: string;
-  otp_code: string;
-  expires_at: string;
-  is_verified: boolean;
-  created_at: string;
-}
-
-// ====================
-// EMAIL CONFIG INTERFACES
-// ====================
-
-export interface EmailConfigData {
-  config_id: number;
-  hostel_id: number;
-  email: string;
-  password: string;
-  smtp_host: string;
-  smtp_port: number;
-  is_active: boolean;
+export interface StudentSpecialMealHistoryItem {
+  id: number
+  meal_name: string
+  date: string
+  cost: number
+  status: string
 }

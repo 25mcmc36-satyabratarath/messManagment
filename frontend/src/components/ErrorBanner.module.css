@@ -1,0 +1,31 @@
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  background: #fde8e8;
+  color: #7a1212;
+  border: 1px solid #f0b4b4;
+}
+
+.text {
+  flex: 1;
+  font-size: 0.9rem;
+}
+
+.dismiss {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.dismiss:hover {
+  opacity: 0.85;
+}

@@ -1,0 +1,23 @@
+.title {
+  margin: 0 0 0.35rem;
+  font-size: 1.5rem;
+}
+
+.sub {
+  margin: 0 0 1.25rem;
+  color: var(--muted, #64748b);
+}
+
+.kpis {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.kpi {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text, #0f172a);
+}

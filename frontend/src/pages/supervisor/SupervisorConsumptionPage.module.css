@@ -1,0 +1,83 @@
+.title {
+  margin: 0 0 0.35rem;
+  font-size: 1.5rem;
+}
+
+.sub {
+  margin: 0 0 1rem;
+  color: var(--muted, #64748b);
+}
+
+.hostelBar {
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  background: var(--surface-2, #f1f5f9);
+  border-radius: 8px;
+  border: 1px solid var(--border, #e2e8f0);
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.input {
+  font: inherit;
+  padding: 0.45rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid var(--border, #cbd5e1);
+  min-width: 140px;
+}
+
+.hostelHint {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  color: var(--muted, #64748b);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+}
+
+.btn {
+  font: inherit;
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid var(--border, #cbd5e1);
+  background: var(--surface, #fff);
+  cursor: pointer;
+  height: fit-content;
+}
+
+.summary {
+  margin: 0 0 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.summary dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted, #64748b);
+}
+
+.summary dd {
+  margin: 0.2rem 0 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}

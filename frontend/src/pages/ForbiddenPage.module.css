@@ -1,0 +1,18 @@
+.wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: var(--bg, #eef2f7);
+}
+
+.text {
+  margin: 0 0 1rem;
+  color: var(--muted, #475569);
+}
+
+.link {
+  color: var(--accent, #1e5a8a);
+  font-weight: 600;
+}
